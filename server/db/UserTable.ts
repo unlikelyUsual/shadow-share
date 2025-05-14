@@ -18,6 +18,7 @@ export const UserTable = pgTable("users", {
   id: integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1000 }),
   name: varchar({ length: 50 }).notNull(),
   email: varchar({ length: 150 }).notNull(),
+  password: varchar({ length: 150 }).notNull(),
   role: userTypeEnum().notNull(),
   username: varchar({ length: 150 }).notNull(),
   lastLoggedAt: timestamp("last_logged_at"),
