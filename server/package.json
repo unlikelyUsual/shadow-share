@@ -1,0 +1,38 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Backend Service for APP",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc",
+    "watch": "npx tsc --watch",
+    "dev": "npx tsc && node dist/index.js",
+    "drizzle:generate": "npx drizzle-kit generate",
+    "drizzle:push": "npx drizzle-kit push",
+    "drizzle:migrate": "npx drizzle-kit migrate",
+    "seed": "npx tsx db/seed.ts",
+    "drizzle:seed": "node --loader esbuild-register/loader -r esbuild-register ./src/db/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^9.3.0",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.38.3",
+    "drizzle-zod": "^0.7.1",
+    "express": "^4.21.2",
+    "pg": "^8.13.1",
+    "redis": "^4.7.0",
+    "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.5",
+    "@types/pg": "^8.11.10",
+    "@types/redis": "^4.0.11",
+    "drizzle-kit": "^0.30.1",
+    "tsx": "^4.19.2"
+  }
+}
