@@ -1,5 +1,6 @@
 import { Router } from "express";
 import PostController from "../controller/post.controller";
+import authentication from "../middlewares/authentication.middleware";
 import { createPost } from "../middlewares/post.middleware";
 import middlewareHandler from "../util/middlewareHandler";
 
@@ -8,12 +9,14 @@ const controller = new PostController();
 
 router.post(
   "/post",
-  middlewareHandler([createPost]),
+  middlewareHandler([createPost, authentication]),
   controller.createPost as any
 );
 
-router.get("/get", (req, res): any => {
-  return res.json({ message: "done" });
-});
+router.get(
+  "/all",
+  middlewareHandler([authentication]),
+  controller.getAllPosts as any
+);
 
 export default router;

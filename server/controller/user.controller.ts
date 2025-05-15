@@ -1,9 +1,10 @@
 import bcrypt from "bcrypt";
-import { eq, or } from "drizzle-orm";
+import { desc, eq, or } from "drizzle-orm";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/config.env";
 import { db } from "../config/db.config";
+import { PostTable } from "../db/PostTable";
 import { UserTable, userTypeEnum } from "../db/UserTable";
 import ErrorHandler from "../util/ErrorHandler";
 
@@ -35,10 +36,11 @@ export default class UserController {
         updatedAt: new Date(),
       };
 
+      console.log("Adding user to table", user);
+
       const { rowCount } = await db.insert(UserTable).values(user);
 
       return res.json({
-        user,
         message: `${rowCount > 0 ? "Created!" : "Done"}`,
       });
     } catch (err) {
@@ -48,7 +50,7 @@ export default class UserController {
 
   getUser = async (req: Request, res: Response) => {
     try {
-      const { id } = req.path as any;
+      const { id } = req.body.user as any;
 
       const rows = await db
         .select()
@@ -92,6 +94,22 @@ export default class UserController {
       );
 
       return res.json({ token });
+    } catch (err) {
+      return ErrorHandler.handleError(res, err);
+    }
+  };
+
+  posts = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.body.user;
+
+      const posts = await db
+        .select()
+        .from(PostTable)
+        .where(eq(PostTable.userId, id))
+        .orderBy(desc(PostTable.updatedAt));
+
+      return res.json({ posts, message: "Fetch!" });
     } catch (err) {
       return ErrorHandler.handleError(res, err);
     }

@@ -1,3 +1,4 @@
+import { desc } from "drizzle-orm";
 import { Request, Response } from "express";
 import { db } from "../config/db.config";
 import { PostTable } from "../db/PostTable";
@@ -15,10 +16,10 @@ class PostController {
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      const { rowCount } = await db.insert(PostTable).values(post);
+      const savedPost = await db.insert(PostTable).values(post);
       return res.json({
-        post,
-        message: `${rowCount > 0 ? "Created!" : "Done"}`,
+        post: savedPost,
+        message: `Created!`,
       });
     } catch (err) {
       return ErrorHandler.handleError(res, err);
@@ -26,8 +27,15 @@ class PostController {
   };
 
   getAllPosts = async (req: Request, res: Response) => {
-    const rows = await db.select().from(PostTable);
-    return res.json({ rows });
+    try {
+      const rows = await db
+        .select()
+        .from(PostTable)
+        .orderBy(desc(PostTable.updatedAt));
+      return res.json({ rows });
+    } catch (err) {
+      return ErrorHandler.handleError(res, err);
+    }
   };
 }
 

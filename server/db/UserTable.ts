@@ -11,6 +11,7 @@ import {
   createSelectSchema,
   createUpdateSchema,
 } from "drizzle-zod";
+import z from "zod";
 
 export const userTypeEnum = pgEnum("userType", ["admin", "user"]);
 
@@ -33,3 +34,12 @@ export const UserTable = pgTable("users", {
 export const selectUserSchema = createSelectSchema(UserTable);
 export const updateUserSchema = createUpdateSchema(UserTable);
 export const insertUserSchema = createInsertSchema(UserTable);
+
+export const registerUserSchema = createInsertSchema(UserTable, {
+  role: (schema) => schema.optional(),
+});
+
+export const loginUserSchema = z.object({
+  email: z.string(),
+  password: z.string(),
+});

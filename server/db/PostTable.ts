@@ -17,7 +17,9 @@ export const PostTable = pgTable("posts", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   title: varchar({ length: 255 }).notNull(),
   content: text().notNull(),
-  userId: integer("user_id").references(() => UserTable.id),
+  userId: integer("user_id")
+    .references(() => UserTable.id)
+    .notNull(),
   createdAt: timestamp("created_at")
     .notNull()
     .default(sql`now()`),

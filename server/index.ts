@@ -1,19 +1,21 @@
 import dotenv from "dotenv";
 import express from "express";
-import connect from "./config/redis.config";
+import connectRedis from "./config/redis.config";
 import postRouter from "./routes/post.route";
+import userRouter from "./routes/user.route";
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 dotenv.config();
-connect();
+connectRedis();
 
 app.use("/api/v1/posts", postRouter);
+app.use("/api/v1/users", userRouter);
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+app.get("/ping", (req, res) => {
+  res.send("pong!🏓");
 });
 
 app.listen(port, () => {
