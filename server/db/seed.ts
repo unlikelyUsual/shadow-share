@@ -2,30 +2,30 @@ import { faker } from "@faker-js/faker";
 import bcrypt from "bcrypt";
 import { db } from "../config/db.config";
 import { PostTable } from "./PostTable";
-import { UserTable } from "./UserTable";
+import { UserTable, userTypeEnum } from "./UserTable";
 
 const main = async () => {
-  const pass = await bcrypt.hash("admin1password", 10);
+  const pass = await bcrypt.hash("test_password", 10);
   const users: any[] = [
     {
       name: "Admin User 1",
       email: "admin1@example.com",
       password: pass,
-      role: "ADMIN",
-      username: "admin1",
+      role: userTypeEnum.enumValues[1],
+      username: "adminuser",
       lastLoggedAt: new Date(),
     },
     {
       name: "Regular User 1",
       email: "user1@example.com",
       password: pass,
-      role: "USER",
+      role: userTypeEnum.enumValues[1],
       username: "user1",
       lastLoggedAt: new Date(),
     },
   ];
 
-  console.log("Seeded users.");
+  console.log("Seeded users...");
 
   const savedUsers = await db.insert(UserTable).values(users).returning();
 
@@ -43,7 +43,7 @@ const main = async () => {
     rows.push(row);
   }
 
-  console.log("Saving posts.");
+  console.log("Saving posts... ");
 
   await db.insert(PostTable).values(rows);
 
