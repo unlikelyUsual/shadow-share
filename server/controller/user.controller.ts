@@ -93,6 +93,11 @@ export default class UserController {
         { expiresIn: "1h" }
       );
 
+      await db
+        .update(UserTable)
+        .set({ lastLoggedAt: new Date() } as any)
+        .where(eq(UserTable.id, user.id));
+
       return res.json({ token });
     } catch (err) {
       return ErrorHandler.handleError(res, err);
