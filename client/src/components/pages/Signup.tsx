@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 
 const Signup: React.FC = () => {
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -14,13 +12,8 @@ const Signup: React.FC = () => {
     setLoading(true);
 
     // Basic validation
-    if (!name || !email || !password || !confirmPassword) {
+    if (!username || !password) {
       setError("Please fill in all fields.");
-      setLoading(false);
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
       setLoading(false);
       return;
     }
@@ -36,19 +29,20 @@ const Signup: React.FC = () => {
       // const response = await fetch('/api/users', {
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ name, email, password }),
+      //   body: JSON.stringify({ username, password }),
       // });
       // const data = await response.json();
 
       // if (response.ok) {
-      //   onSignupSuccess({ name: data.user.name, email: data.user.email }); // Assuming backend returns user info
+      //   // Assuming your backend returns some user data like name and email
+      //   onSignupSuccess({ name: username, email: `${username}@example.com` }); // Mocking email from username
       // } else {
       //   setError(data.error || 'Signup failed. Please try again.');
       // }
 
       // --- Mock Signup Success ---
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
-      console.log("Mock Signup:", { name, email, password });
+      console.log("Mock Signup:", { username, password });
       // --- End Mock Signup Success ---
     } catch (err) {
       console.error("Signup error:", err);
@@ -59,99 +53,98 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
-          Sign Up
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Full Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
-              placeholder="John Doe"
-            />
+    // The main container with font styles - typically fonts are loaded globally in index.css
+    <div
+      className="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden"
+      style={{ fontFamily: '"Spline Sans", "Noto Sans", sans-serif' }}
+    >
+      <div className="layout-container flex h-full grow flex-col">
+        <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f2f5] px-10 py-3">
+          <div className="flex items-center gap-4 text-[#111518]">
+            <div className="size-4">
+              {/* SVG Icon */}
+              <svg
+                viewBox="0 0 48 48"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g clipPath="url(#clip0_6_319)">
+                  <path
+                    d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z"
+                    fill="currentColor"
+                  ></path>
+                </g>
+                <defs>
+                  <clipPath id="clip0_6_319">
+                    <rect width="48" height="48" fill="white"></rect>
+                  </clipPath>
+                </defs>
+              </svg>
+            </div>
+            <h2 className="text-[#111518] text-lg font-bold leading-tight tracking-[-0.015em]">
+              Whisper
+            </h2>
           </div>
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
-              placeholder="you@example.com"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
-              placeholder="••••••••"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
-              placeholder="••••••••"
-            />
-          </div>
-          {error && <p className="text-red-600 text-sm text-center">{error}</p>}
-          <button
-            type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={loading}
-          >
-            {loading ? "Signing Up..." : "Sign Up"}
+          <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#f0f2f5] text-[#111518] text-sm font-bold leading-normal tracking-[0.015em]">
+            <span className="truncate">Log in</span>
           </button>
-        </form>
-        <p className="mt-6 text-center text-sm text-gray-600">
-          Already have an account?{" "}
-          <button className="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline">
-            Login
-          </button>
-        </p>
+        </header>
+
+        <div className="px-40 flex flex-1 justify-center py-5">
+          <div className="layout-content-container flex flex-col w-full max-w-[512px] py-5 flex-1">
+            <h2 className="text-[#111518] tracking-light text-[28px] font-bold leading-tight px-4 text-center pb-3 pt-5">
+              Create an account
+            </h2>
+
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col items-center w-full"
+            >
+              <div className="flex max-w-[480px] w-full flex-wrap items-end gap-4 px-4 py-3 mx-auto">
+                <label className="flex flex-col min-w-40 flex-1">
+                  <input
+                    type="text"
+                    placeholder="Username"
+                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111518] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60768a] p-4 text-base font-normal leading-normal"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+              <div className="flex max-w-[480px] w-full flex-wrap items-end gap-4 px-4 py-3 mx-auto">
+                <label className="flex flex-col min-w-40 flex-1">
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111518] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60768a] p-4 text-base font-normal leading-normal"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+              {error && (
+                <p className="text-red-600 text-sm text-center mt-2">{error}</p>
+              )}
+              <div className="flex px-4 py-3 w-full max-w-[480px] mx-auto">
+                <button
+                  type="submit"
+                  className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 flex-1 bg-[#0b80ee] text-white text-sm font-bold leading-normal tracking-[0.015em] disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={loading}
+                >
+                  <span className="truncate">
+                    {loading ? "Registering..." : "Register"}
+                  </span>
+                </button>
+              </div>
+              <p className="text-[#60768a] text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center">
+                By signing up, you agree to our Terms of Service and Privacy
+                Policy.
+              </p>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   );
