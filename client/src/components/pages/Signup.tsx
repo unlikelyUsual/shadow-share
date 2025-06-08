@@ -1,6 +1,25 @@
 import React, { useState } from "react";
+import { Link } from "react-router";
+import Navbar from "../Navbar/Navbar";
+
+type FormType = {
+  name: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  username: string;
+};
+
+const initialState: FormType = {
+  name: "",
+  email: "",
+  password: "",
+  passwordConfirm: "",
+  username: "",
+};
 
 const Signup: React.FC = () => {
+  const [form, setForm] = useState<FormType>(initialState);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -52,6 +71,15 @@ const Signup: React.FC = () => {
     }
   };
 
+  const handleChange = (e: React.ChangeEvent) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  };
+
   return (
     // The main container with font styles - typically fonts are loaded globally in index.css
     <div
@@ -59,37 +87,7 @@ const Signup: React.FC = () => {
       style={{ fontFamily: '"Spline Sans", "Noto Sans", sans-serif' }}
     >
       <div className="layout-container flex h-full grow flex-col">
-        <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f2f5] px-10 py-3">
-          <div className="flex items-center gap-4 text-[#111518]">
-            <div className="size-4">
-              {/* SVG Icon */}
-              <svg
-                viewBox="0 0 48 48"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g clipPath="url(#clip0_6_319)">
-                  <path
-                    d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z"
-                    fill="currentColor"
-                  ></path>
-                </g>
-                <defs>
-                  <clipPath id="clip0_6_319">
-                    <rect width="48" height="48" fill="white"></rect>
-                  </clipPath>
-                </defs>
-              </svg>
-            </div>
-            <h2 className="text-[#111518] text-lg font-bold leading-tight tracking-[-0.015em]">
-              Whisper
-            </h2>
-          </div>
-          <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#f0f2f5] text-[#111518] text-sm font-bold leading-normal tracking-[0.015em]">
-            <span className="truncate">Log in</span>
-          </button>
-        </header>
-
+        <Navbar />
         <div className="px-40 flex flex-1 justify-center py-5">
           <div className="layout-content-container flex flex-col w-full max-w-[512px] py-5 flex-1">
             <h2 className="text-[#111518] tracking-light text-[28px] font-bold leading-tight px-4 text-center pb-3 pt-5">
@@ -104,10 +102,37 @@ const Signup: React.FC = () => {
                 <label className="flex flex-col min-w-40 flex-1">
                   <input
                     type="text"
-                    placeholder="Username"
+                    placeholder="Sam Wilson"
+                    name="name"
                     className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111518] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60768a] p-4 text-base font-normal leading-normal"
                     value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={handleChange}
+                    required
+                  />
+                </label>
+              </div>
+              <div className="flex max-w-[480px] w-full flex-wrap items-end gap-4 px-4 py-3 mx-auto">
+                <label className="flex flex-col min-w-40 flex-1">
+                  <input
+                    type="email"
+                    placeholder="sam.wilson@shadowshare"
+                    name="email"
+                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111518] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60768a] p-4 text-base font-normal leading-normal"
+                    value={username}
+                    onChange={handleChange}
+                    required
+                  />
+                </label>
+              </div>
+              <div className="flex max-w-[480px] w-full flex-wrap items-end gap-4 px-4 py-3 mx-auto">
+                <label className="flex flex-col min-w-40 flex-1">
+                  <input
+                    type="text"
+                    placeholder="Username"
+                    name="username"
+                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111518] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60768a] p-4 text-base font-normal leading-normal"
+                    value={username}
+                    onChange={handleChange}
                     required
                   />
                 </label>
@@ -117,9 +142,23 @@ const Signup: React.FC = () => {
                   <input
                     type="password"
                     placeholder="Password"
+                    name="password"
                     className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111518] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60768a] p-4 text-base font-normal leading-normal"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={handleChange}
+                    required
+                  />
+                </label>
+              </div>
+              <div className="flex max-w-[480px] w-full flex-wrap items-end gap-4 px-4 py-3 mx-auto">
+                <label className="flex flex-col min-w-40 flex-1">
+                  <input
+                    type="password"
+                    placeholder="Confirm Password"
+                    name="passwordConfim"
+                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111518] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60768a] p-4 text-base font-normal leading-normal"
+                    value={password}
+                    onChange={handleChange}
                     required
                   />
                 </label>
@@ -137,6 +176,15 @@ const Signup: React.FC = () => {
                     {loading ? "Registering..." : "Register"}
                   </span>
                 </button>
+              </div>
+              <p className="text-gray-600 font-bold">Or</p>
+              <div className="flex px-4 py-3 w-full max-w-[480px] mx-auto">
+                <Link
+                  className="flex h-10 px-4 flex-1 items-center justify-center rounded-full border-2 text-sm font-bold bg-transparent hover:bg-blue-500 border-blue-600 hover:border-transparent text-blue-600 hover:text-white"
+                  to="/login"
+                >
+                  Login
+                </Link>
               </div>
               <p className="text-[#60768a] text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center">
                 By signing up, you agree to our Terms of Service and Privacy

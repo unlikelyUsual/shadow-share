@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { Link } from "react-router";
 import Navbar from "../Navbar/Navbar";
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState<string>(""); // Changed from email to username based on HTML placeholder
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -58,15 +59,6 @@ const Login: React.FC = () => {
     }
   };
 
-  // Placeholder for navigation to signup, as onNavigateToSignup prop is removed
-  const handleNavigateToSignupClick = () => {
-    console.log(
-      "Navigate to Signup clicked (onNavigateToSignup prop removed). Handle navigation in parent."
-    );
-    // You'll need to handle navigation in the parent component (App.jsx)
-    // For example, by using useNavigate hook here if this component manages its own navigation.
-  };
-
   return (
     // The main container with font styles - typically fonts are loaded globally in index.css
     <div
@@ -97,8 +89,6 @@ const Login: React.FC = () => {
                 </label>
               </div>
               <div className="flex max-w-[480px] w-full flex-wrap items-end gap-4 px-4 py-3 mx-auto">
-                {" "}
-                {/* Added mx-auto for centering */}
                 <label className="flex flex-col min-w-40 flex-1">
                   <input
                     type="password"
@@ -114,8 +104,6 @@ const Login: React.FC = () => {
                 <p className="text-red-600 text-sm text-center mt-2">{error}</p>
               )}
               <div className="flex px-4 py-3 w-full max-w-[480px] mx-auto">
-                {" "}
-                {/* Added mx-auto for centering */}
                 <button
                   type="submit"
                   className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 flex-1 bg-[#0b80ee] text-white text-sm font-bold leading-normal tracking-[0.015em] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -126,6 +114,12 @@ const Login: React.FC = () => {
                   </span>
                 </button>
               </div>
+              <p>
+                Don't have account,{" "}
+                <Link className="text-blue-600" to="/signup">
+                  Sign up now!
+                </Link>
+              </p>
             </form>
           </div>
         </div>
