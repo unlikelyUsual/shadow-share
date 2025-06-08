@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Navbar from "../Navbar/Navbar";
 
 type FormType = {
@@ -20,10 +20,9 @@ const initialState: FormType = {
 
 const Signup: React.FC = () => {
   const [form, setForm] = useState<FormType>(initialState);
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,38 +30,27 @@ const Signup: React.FC = () => {
     setLoading(true);
 
     // Basic validation
-    if (!username || !password) {
+    if (Object.values(form).find((item) => item.trim().length === 0)) {
       setError("Please fill in all fields.");
       setLoading(false);
       return;
     }
-    if (password.length < 8) {
+
+    if (form.password.length < 8) {
       setError("Password must be at least 8 characters long.");
       setLoading(false);
       return;
     }
 
-    // Simulate API call for signup
+    if (form.password !== form.passwordConfirm) {
+      setError("Password must match");
+      setLoading(false);
+      return;
+    }
+
     try {
-      // In a real app, you'd make a fetch/axios call to your backend /users (signup) endpoint
-      // const response = await fetch('/api/users', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ username, password }),
-      // });
-      // const data = await response.json();
-
-      // if (response.ok) {
-      //   // Assuming your backend returns some user data like name and email
-      //   onSignupSuccess({ name: username, email: `${username}@example.com` }); // Mocking email from username
-      // } else {
-      //   setError(data.error || 'Signup failed. Please try again.');
-      // }
-
-      // --- Mock Signup Success ---
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
-      console.log("Mock Signup:", { username, password });
-      // --- End Mock Signup Success ---
+      console.log({ form });
+      //   navigate("/login");
     } catch (err) {
       console.error("Signup error:", err);
       setError("An unexpected error occurred. Please try again.");
@@ -71,7 +59,7 @@ const Signup: React.FC = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const { name, value } = e.target;
     setForm({
@@ -105,7 +93,7 @@ const Signup: React.FC = () => {
                     placeholder="Sam Wilson"
                     name="name"
                     className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111518] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60768a] p-4 text-base font-normal leading-normal"
-                    value={username}
+                    value={form.name}
                     onChange={handleChange}
                     required
                   />
@@ -118,7 +106,7 @@ const Signup: React.FC = () => {
                     placeholder="sam.wilson@shadowshare"
                     name="email"
                     className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111518] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60768a] p-4 text-base font-normal leading-normal"
-                    value={username}
+                    value={form.email}
                     onChange={handleChange}
                     required
                   />
@@ -128,10 +116,10 @@ const Signup: React.FC = () => {
                 <label className="flex flex-col min-w-40 flex-1">
                   <input
                     type="text"
-                    placeholder="Username"
+                    placeholder="sam_wilson_98"
                     name="username"
                     className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111518] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60768a] p-4 text-base font-normal leading-normal"
-                    value={username}
+                    value={form.username}
                     onChange={handleChange}
                     required
                   />
@@ -144,7 +132,7 @@ const Signup: React.FC = () => {
                     placeholder="Password"
                     name="password"
                     className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111518] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60768a] p-4 text-base font-normal leading-normal"
-                    value={password}
+                    value={form.password}
                     onChange={handleChange}
                     required
                   />
@@ -155,9 +143,9 @@ const Signup: React.FC = () => {
                   <input
                     type="password"
                     placeholder="Confirm Password"
-                    name="passwordConfim"
+                    name="passwordConfirm"
                     className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111518] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60768a] p-4 text-base font-normal leading-normal"
-                    value={password}
+                    value={form.passwordConfirm}
                     onChange={handleChange}
                     required
                   />
