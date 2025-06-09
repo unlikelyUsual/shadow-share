@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { client } from "../../api/client";
 import Navbar from "../Navbar/Navbar";
 
 type FormType = {
@@ -48,12 +49,21 @@ const Signup: React.FC = () => {
       return;
     }
 
+    console.log({ form });
+
     try {
-      console.log({ form });
-      //   navigate("/login");
-    } catch (err) {
-      console.error("Signup error:", err);
-      setError("An unexpected error occurred. Please try again.");
+      const { passwordConfirm, ...data } = form;
+      const res = await client.post("/api/v1/users/register", data);
+      console.log({ res });
+      navigate("/login");
+    } catch (err: any) {
+      if (err?.response?.data) {
+        console.error("Signup error:", err?.response?.data);
+        setError(err.response.data.message);
+      } else {
+        console.error("Signup error:", err);
+        setError("An unexpected error occurred. Please try again.");
+      }
     } finally {
       setLoading(false);
     }

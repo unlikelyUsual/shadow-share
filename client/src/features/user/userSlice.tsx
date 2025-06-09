@@ -8,7 +8,7 @@ export const slice = createSlice({
   initialState: initialState,
   name: "userSlice",
   reducers: {},
-  // extraReducers : {}
+  extraReducers: (builder) => {},
 });
 
 export default slice.reducer;

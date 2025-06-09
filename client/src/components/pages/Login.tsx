@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router";
+import { client } from "../../api/client";
+import { decodeToken } from "../../api/jwt";
 import Navbar from "../Navbar/Navbar";
 
 const Login: React.FC = () => {
@@ -20,37 +22,14 @@ const Login: React.FC = () => {
       return;
     }
 
-    // Simulate API call for login
     try {
-      // In a real app, you'd make a fetch/axios call to your backend /login endpoint
-      // const response = await fetch('/api/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ username, password }), // Use username here
-      // });
-      // const data = await response.json();
-
-      // if (response.ok) {
-      //   // onLoginSuccess({ name: data.user.name, email: data.user.email }); // Removed onLoginSuccess call
-      //   console.log('Login successful (mock)! User:', { name: data.user.name, email: data.user.email });
-      // } else {
-      //   setError(data.error || 'Login failed. Please check your credentials.');
-      // }
-
-      // --- Mock Login Success ---
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
-      if (username === "testuser" && password === "password123") {
-        // Mock credentials
-        // onLoginSuccess({ name: 'Test User', email: 'test@example.com' }); // Removed onLoginSuccess call
-        console.log(
-          "Login successful (mock)! User: Test User, test@example.com"
-        );
-        // You'll need to handle navigation/state update in the parent component (App.jsx)
-        // For example, by using useNavigate hook here if this component manages its own navigation.
-      } else {
-        setError("Invalid username or password.");
-      }
-      // --- End Mock Login Success ---
+      const res = await client.post("/api/v1/users/login", {
+        username,
+        password,
+      });
+      console.log({ res });
+      const { token } = res as any;
+      const data = decodeToken(token);
     } catch (err) {
       console.error("Login error:", err);
       setError("An unexpected error occurred. Please try again.");
