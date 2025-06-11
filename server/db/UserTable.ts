@@ -40,6 +40,6 @@ export const registerUserSchema = createInsertSchema(UserTable, {
 });
 
 export const loginUserSchema = z.object({
-  email: z.string(),
+  emailOrUserName: z.string(),
   password: z.string(),
 });

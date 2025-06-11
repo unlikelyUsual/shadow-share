@@ -68,12 +68,17 @@ export default class UserController {
 
   login = async (req: Request, res: Response) => {
     try {
-      const { email, password } = req.body;
+      const { emailOrUserName, password } = req.body;
 
       const users = await db
         .select()
         .from(UserTable)
-        .where(eq(UserTable.email, email));
+        .where(
+          or(
+            eq(UserTable.email, emailOrUserName),
+            eq(UserTable.username, emailOrUserName)
+          )
+        );
 
       if (users.length == 0) {
         return res.status(400).json({ message: "User not found" });
@@ -88,7 +93,13 @@ export default class UserController {
       }
 
       const token = jwt.sign(
-        { name: user.name, email: user.email, id: user.id, role: user.role },
+        {
+          name: user.name,
+          email: user.email,
+          username: user.username,
+          id: user.id,
+          role: user.role,
+        },
         JWT_SECRET,
         { expiresIn: "1h" }
       );
