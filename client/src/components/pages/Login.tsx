@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router";
-import { client } from "../../api/client";
-import { decodeToken } from "../../api/jwt";
+import { loginUser } from "../../features/user/userSlice";
+import type { DipatchType } from "../../store";
 import Navbar from "../Navbar/Navbar";
 
 const Login: React.FC = () => {
+  const dispatch = useDispatch<DipatchType>();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -23,14 +25,8 @@ const Login: React.FC = () => {
     }
 
     try {
-      const res = await client.post("/api/v1/users/login", {
-        username,
-        password,
-      });
-      console.log({ res });
-      const { token } = res as any;
-      const data = decodeToken(token);
-    } catch (err) {
+      await dispatch(loginUser({ username, password })).unwrap();
+    } catch (err: unknown) {
       console.error("Login error:", err);
       setError("An unexpected error occurred. Please try again.");
     } finally {

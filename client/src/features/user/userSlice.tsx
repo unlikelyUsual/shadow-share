@@ -6,11 +6,17 @@ import type { ILoginRespone, LoginType, UserType } from "../../types/UserType";
 
 export type UserInitialState = {
   user: UserType | null;
-  loading?: boolean;
+  status?: "success" | "failed" | "pending";
+  error?: string;
   token: string | null;
 };
 
-export const initialState: UserInitialState = { user: null, token: null };
+export const initialState: UserInitialState = {
+  user: null,
+  token: null,
+  error: "",
+  status: "success",
+};
 
 export const loginUser = createAppAsyncThunk(
   "posts/addNewPost",
@@ -28,14 +34,20 @@ export const slice = createSlice({
   name: "userSlice",
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(loginUser.fulfilled, (state, action) => {
-      const user = decodeToken(action.payload.token);
-      state.user = user;
-      state.token = action.payload.token;
-      state.loading = false;
-    }),
-      builder.addCase(loginUser.pending, (state, action) => {
-        state.loading = true;
+    builder
+      .addCase(loginUser.fulfilled, (state, action) => {
+        const user = decodeToken(action.payload.token);
+        state.user = user;
+        state.status = "success";
+        state.token = action.payload.token;
+      })
+      .addCase(loginUser.pending, (state, action) => {
+        state.status = "pending";
+        state.error = "";
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? "Unknown Error";
       });
   },
 });
