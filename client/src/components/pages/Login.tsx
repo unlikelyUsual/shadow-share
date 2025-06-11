@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { loginUser } from "../../features/user/userSlice";
 import type { DipatchType } from "../../store";
+import ToastHelper from "../../util/ToastHelper";
 import Navbar from "../Navbar/Navbar";
 
 const Login: React.FC = () => {
   const dispatch = useDispatch<DipatchType>();
+  const navigate = useNavigate();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -26,9 +28,11 @@ const Login: React.FC = () => {
 
     try {
       await dispatch(loginUser({ username, password })).unwrap();
+      ToastHelper.success("User Loged in!");
+      navigate("/dashboard");
     } catch (err: unknown) {
+      ToastHelper.error("Something went wrong");
       console.error("Login error:", err);
-      setError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }

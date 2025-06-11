@@ -1,11 +1,20 @@
-import React, { useState } from "react";
-import { Outlet } from "react-router";
+import React, { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router";
 import Navbar from "../components/Navbar/Navbar";
+import type { UserStoreType } from "../features/user/userSlice";
+import { userAppSelect } from "../store";
+import ToastHelper from "./ToastHelper";
 
 const PrivateRoute: React.FC<any> = ({}) => {
-  const [user, setUser] = useState<{ name: string; email: string } | null>(
-    null
-  );
+  const userState: UserStoreType = userAppSelect((state) => state.user);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!userState.user || userState.user === null) {
+      navigate("/login");
+      ToastHelper.info("Please login in");
+    }
+  }, [userState]);
 
   return (
     <div className="min-h-screen flex flex-col text-black">

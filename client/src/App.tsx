@@ -1,5 +1,6 @@
 import { Provider } from "react-redux";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { ToastContainer } from "react-toastify";
 import Dashboard from "./components/pages/Dashboard";
 import Login from "./components/pages/Login";
 import Signup from "./components/pages/Signup";
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
+      <ToastContainer />
     </Provider>
   );
 };

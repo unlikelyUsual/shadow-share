@@ -4,14 +4,14 @@ import { decodeToken } from "../../api/jwt";
 import { createAppAsyncThunk } from "../../api/thunk";
 import type { ILoginRespone, LoginType, UserType } from "../../types/UserType";
 
-export type UserInitialState = {
+export type UserStoreType = {
   user: UserType | null;
   status?: "success" | "failed" | "pending";
   error?: string;
   token: string | null;
 };
 
-export const initialState: UserInitialState = {
+export const initialState: UserStoreType = {
   user: null,
   token: null,
   error: "",
@@ -21,10 +21,10 @@ export const initialState: UserInitialState = {
 export const loginUser = createAppAsyncThunk(
   "posts/addNewPost",
   async (payload: LoginType) => {
-    const response = await client.post<ILoginRespone>(
-      "/api/v1/users/login",
-      payload
-    );
+    const response = await client.post<ILoginRespone>("/api/v1/users/login", {
+      emailOrUserName: payload.username,
+      password: payload.password,
+    });
     return response.data;
   }
 );
