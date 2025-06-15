@@ -10,3 +10,5 @@ export type PostModelType = {
 export type PostType = Partial<PostModelType>;
 
 export type GetPostReponse = PostModelType[];
+
+export type AddNewPost = Pick<PostModelType, "title" | "content" | "userId">;

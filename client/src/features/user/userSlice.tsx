@@ -19,7 +19,7 @@ export const initialState: UserStoreType = {
 };
 
 export const loginUser = createAppAsyncThunk(
-  "posts/addNewPost",
+  "user/login",
   async (payload: LoginType) => {
     const response = await client.post<ILoginRespone>("/api/v1/users/login", {
       emailOrUserName: payload.username,
