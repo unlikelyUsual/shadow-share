@@ -9,6 +9,14 @@ export type PostModelType = {
 
 export type PostType = Partial<PostModelType>;
 
-export type GetPostReponse = PostModelType[];
+export type AddNewPost = Pick<PostModelType, "title" | "content">;
 
-export type AddNewPost = Pick<PostModelType, "title" | "content" | "userId">;
+export type AddNewPostRes = {
+  post: PostType;
+  message: string;
+};
+
+export type GetAllPostRes = {
+  posts: PostModelType[];
+  message: string;
+};

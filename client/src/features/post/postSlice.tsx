@@ -3,7 +3,8 @@ import { client } from "../../api/client";
 import { createAppAsyncThunk } from "../../api/thunk";
 import type {
   AddNewPost,
-  GetPostReponse,
+  AddNewPostRes,
+  GetAllPostRes,
   PostModelType,
 } from "../../types/PostType";
 
@@ -20,14 +21,17 @@ export const initialState: PostInitiateState = {
 };
 
 export const getPosts = createAppAsyncThunk("", async () => {
-  const response = await client.get<GetPostReponse>("/api/v1/post/");
+  const response = await client.get<GetAllPostRes>("/api/v1/post/all");
   return response.data;
 });
 
 export const addPost = createAppAsyncThunk(
   "/post/addNewPost",
   async (payload: AddNewPost) => {
-    const response = await client.post("/api/v1/posts/post", payload);
+    const response = await client.post<AddNewPostRes>(
+      "/api/v1/posts/post",
+      payload
+    );
     return response;
   }
 );
@@ -36,7 +40,32 @@ export const slice = createSlice({
   initialState: initialState,
   name: "postSlice",
   reducers: {},
-  // extraReducers : {}
+  extraReducers: (builder) => {
+    builder
+      .addCase(getPosts.fulfilled, (state, action) => {
+        state.posts = action.payload.posts;
+        state.status = "success";
+      })
+      .addCase(getPosts.pending, (state, action) => {
+        state.status = "pending";
+        state.error = "";
+      })
+      .addCase(getPosts.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? "Unknown Error";
+      })
+      .addCase(addPost.fulfilled, (state, action) => {
+        getPosts();
+      })
+      .addCase(addPost.pending, (state, action) => {
+        state.status = "pending";
+        state.error = "";
+      })
+      .addCase(addPost.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? "Unknown Error";
+      });
+  },
 });
 
 export default slice.reducer;

@@ -32,7 +32,7 @@ class PostController {
         .select()
         .from(PostTable)
         .orderBy(desc(PostTable.updatedAt));
-      return res.json({ rows });
+      return res.json({ posts: rows, message: "Fetched!" });
     } catch (err) {
       return ErrorHandler.handleError(res, err);
     }
