@@ -20,3 +20,10 @@ export interface LoginType {
 export interface ILoginRespone {
   token: string;
 }
+
+export type TRegisterUser = {
+  name: string;
+  email: string;
+  password: string;
+  username: string;
+};

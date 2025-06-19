@@ -1,10 +1,18 @@
 import React from "react";
-import { userAppSelect } from "../../store";
+import { useGetPostsQuery } from "../../features/post/postSlice";
 import no_data from "/img/no_data.jpg";
 import user_default_image from "/img/user_profile.jpg";
 
 const PostList: React.FC = () => {
-  const posts = userAppSelect((store) => store.post.posts);
+  const { isFetching, isLoading, data } = useGetPostsQuery({
+    refetchOnMountOrArgChange: true,
+  });
+
+  if (isLoading || isFetching) return <div>Loading...</div>;
+
+  if (!data) return <div>No data available</div>;
+
+  const { posts } = data;
 
   if (posts.length === 0) {
     return (

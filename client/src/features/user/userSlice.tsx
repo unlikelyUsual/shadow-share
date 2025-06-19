@@ -1,19 +1,21 @@
-import type { ILoginRespone, LoginType } from "../../types/UserType";
-import { apiSlice } from "../apiSlice";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import type { UserType } from "../../types/UserType";
 
-export const userSlice = apiSlice.injectEndpoints({
-  endpoints: (builder) => ({
-    loginUser: builder.mutation<ILoginRespone, LoginType>({
-      query: (payload: LoginType) => ({
-        url: `users/login`,
-        method: "POST",
-        body: {
-          emailOrUserName: payload.username,
-          password: payload.password,
-        },
-      }),
-    }),
-  }),
+export type InitialStateType = {
+  user: UserType | null;
+};
+
+const initialState: InitialStateType = {
+  user: null,
+};
+
+export const userSlice = createSlice({
+  initialState: initialState,
+  name: "userReducer",
+  reducers: {
+    logout: () => initialState,
+    setUser: (state, action: PayloadAction<UserType>) => {
+      state.user = action.payload;
+    },
+  },
 });
-
-export const { useLoginUserMutation } = userSlice;

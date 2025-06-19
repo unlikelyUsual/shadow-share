@@ -1,12 +1,15 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router";
 import Navbar from "../components/Navbar/Navbar";
-import type { UserStoreType } from "../features/user/userSlice";
+import type { InitialStateType } from "../features/user/userSlice";
 import { userAppSelect } from "../store";
 import ToastHelper from "./ToastHelper";
 
 const PrivateRoute: React.FC<any> = ({}) => {
-  const userState: UserStoreType = userAppSelect((state) => state.user);
+  const userState = userAppSelect(
+    (state) => state.user
+  ) as unknown as InitialStateType;
+
   const navigate = useNavigate();
 
   useEffect(() => {

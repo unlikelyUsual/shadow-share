@@ -1,18 +1,17 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router";
-import { loginUser } from "../../features/user/userSlice";
-import type { DipatchType } from "../../store";
+import { useLoginUserMutation } from "../../features/user/userApi";
 import ToastHelper from "../../util/ToastHelper";
 import Navbar from "../Navbar/Navbar";
 
 const Login: React.FC = () => {
-  const dispatch = useDispatch<DipatchType>();
   const navigate = useNavigate();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [loginUser, { isLoading }] = useLoginUserMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +26,7 @@ const Login: React.FC = () => {
     }
 
     try {
-      await dispatch(loginUser({ username, password })).unwrap();
+      await loginUser({ username, password }).unwrap();
       ToastHelper.success("User Loged in!");
       navigate("/dashboard");
     } catch (err: unknown) {
@@ -86,10 +85,10 @@ const Login: React.FC = () => {
                 <button
                   type="submit"
                   className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 flex-1 bg-[#0b80ee] text-white text-sm font-bold leading-normal tracking-[0.015em] disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={loading}
+                  disabled={loading || isLoading}
                 >
                   <span className="truncate">
-                    {loading ? "Logging in..." : "Login"}
+                    {loading || isLoading ? "Logging in..." : "Login"}
                   </span>
                 </button>
               </div>
