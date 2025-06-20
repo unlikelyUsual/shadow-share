@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { decodeToken } from "../../api/jwt";
 import { useLoginUserMutation } from "../../features/user/userApi";
+import { setUser } from "../../features/user/userSlice";
+import { userAppDispatch } from "../../store";
 import ToastHelper from "../../util/ToastHelper";
 import Navbar from "../Navbar/Navbar";
 
@@ -10,7 +13,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-
+  const dispatch = userAppDispatch();
   const [loginUser, { isLoading }] = useLoginUserMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -26,7 +29,9 @@ const Login: React.FC = () => {
     }
 
     try {
-      await loginUser({ username, password }).unwrap();
+      const { token } = await loginUser({ username, password }).unwrap();
+      const user = decodeToken(token);
+      dispatch(setUser(user));
       ToastHelper.success("User Loged in!");
       navigate("/dashboard");
     } catch (err: unknown) {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { client } from "../../api/client";
+import { useRegisterMutation } from "../../features/user/userApi";
 import Navbar from "../Navbar/Navbar";
 
 type FormType = {
@@ -24,6 +24,7 @@ const Signup: React.FC = () => {
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [register, { isLoading }] = useRegisterMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,23 +51,10 @@ const Signup: React.FC = () => {
     }
 
     console.log({ form });
-
-    try {
-      const { passwordConfirm, ...data } = form;
-      const res = await client.post("/api/v1/users/register", data);
-      console.log({ res });
-      navigate("/login");
-    } catch (err: any) {
-      if (err?.response?.data) {
-        console.error("Signup error:", err?.response?.data);
-        setError(err.response.data.message);
-      } else {
-        console.error("Signup error:", err);
-        setError("An unexpected error occurred. Please try again.");
-      }
-    } finally {
-      setLoading(false);
-    }
+    const { passwordConfirm, ...data } = form;
+    await register(data).unwrap();
+    navigate("/login");
+    setLoading(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,10 +156,10 @@ const Signup: React.FC = () => {
                 <button
                   type="submit"
                   className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 flex-1 bg-[#0b80ee] text-white text-sm font-bold leading-normal tracking-[0.015em] disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={loading}
+                  disabled={loading || isLoading}
                 >
                   <span className="truncate">
-                    {loading ? "Registering..." : "Register"}
+                    {loading || isLoading ? "Registering..." : "Register"}
                   </span>
                 </button>
               </div>
