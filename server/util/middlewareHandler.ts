@@ -3,7 +3,11 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 const middlewareHandler =
   (middlewares: RequestHandler[]) =>
   (req: Request, res: Response, next: NextFunction) => {
-    console.log("Request : ", { body: req.body, path: req.path });
+    console.log("Request : ", {
+      body: req.body,
+      path: req.path,
+      // headers: req.headers,
+    });
     const executeMiddleware = (index: number) => {
       if (index < middlewares.length) {
         middlewares[index](req, res, (err?: any) => {

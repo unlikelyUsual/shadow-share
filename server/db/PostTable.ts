@@ -6,11 +6,8 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import {
-  createInsertSchema,
-  createSelectSchema,
-  createUpdateSchema,
-} from "drizzle-zod";
+import { createSelectSchema, createUpdateSchema } from "drizzle-zod";
+import { z } from "zod";
 import { UserTable } from "./UserTable";
 
 export const PostTable = pgTable("posts", {
@@ -30,4 +27,8 @@ export const PostTable = pgTable("posts", {
 
 export const selectPostSchema = createSelectSchema(PostTable);
 export const updatePostSchema = createUpdateSchema(PostTable);
-export const insertPostSchema = createInsertSchema(PostTable);
+
+export const insertPostSchema = z.object({
+  title: z.string(),
+  content: z.string(),
+});
