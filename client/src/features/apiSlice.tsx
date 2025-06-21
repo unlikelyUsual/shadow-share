@@ -1,10 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { useNavigate } from "react-router";
 import type { RootStateType } from "../store";
 import { BASE_URL } from "../util/Constants";
 import { logout } from "./user/userSlice";
-
-const navigate = useNavigate();
 
 const fetchQuery = fetchBaseQuery({
   baseUrl: BASE_URL + "/api/v1/",
@@ -20,7 +17,7 @@ const customBaseQuery = async (args: any, api: any, extraOptions: any) => {
 
   if (result?.error?.status === 401) {
     api.dispatch(logout());
-    navigate("/login");
+    window.location.href = "/login";
   }
 
   return result;

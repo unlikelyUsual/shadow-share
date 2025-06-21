@@ -1,8 +1,8 @@
 import { jwtDecode } from "jwt-decode"; // Import the named export
 import type { TLoginUserJWT } from "../types/UserType";
 
-export const decodeToken = (token: string): TLoginUserJWT => {
-  return jwtDecode<TLoginUserJWT>(token);
+export const decodeToken = (token: string): TLoginUserJWT | null => {
+  return token ? jwtDecode<TLoginUserJWT>(token) : null;
 };
 
 export const isTokenValid = (token: TLoginUserJWT | null): boolean => {
