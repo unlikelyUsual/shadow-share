@@ -101,7 +101,7 @@ export default class UserController {
           role: user.role,
         },
         JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "2h" }
       );
 
       await db

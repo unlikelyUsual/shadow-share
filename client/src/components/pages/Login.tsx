@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { decodeToken } from "../../api/jwt";
 import { useLoginUserMutation } from "../../features/user/userApi";
 import { setUser } from "../../features/user/userSlice";
 import { userAppDispatch } from "../../store";
@@ -21,7 +20,6 @@ const Login: React.FC = () => {
     setError("");
     setLoading(true);
 
-    // Basic validation
     if (!username || !password) {
       setError("Please fill in all fields.");
       setLoading(false);
@@ -30,8 +28,7 @@ const Login: React.FC = () => {
 
     try {
       const { token } = await loginUser({ username, password }).unwrap();
-      const user = decodeToken(token);
-      dispatch(setUser(user));
+      dispatch(setUser(token));
       ToastHelper.success("User Loged in!");
       navigate("/dashboard");
     } catch (err: unknown) {
@@ -43,7 +40,6 @@ const Login: React.FC = () => {
   };
 
   return (
-    // The main container with font styles - typically fonts are loaded globally in index.css
     <div
       className="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden"
       style={{ fontFamily: '"Spline Sans", "Noto Sans", sans-serif' }}

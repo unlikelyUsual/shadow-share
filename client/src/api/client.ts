@@ -1,13 +1,18 @@
-import axios from "axios";
+import type { TLoginUserJWT, UserType } from "../types/UserType";
+import { JWT_TOKEN } from "../util/Constants";
+import { decodeToken, isTokenValid } from "./jwt";
 
-export const client = axios.create({
-  baseURL: "http://localhost:3000",
-});
-
-export const setLocalstorage = (data: unknown) => {
-  localStorage.setItem("token_user", JSON.stringify(data));
+export const setLocalstorage = (token: string): void => {
+  localStorage.setItem(JWT_TOKEN, token);
 };
 
-export const getLocalStorage = (key: string) => {
-  localStorage.getItem(key);
+export const getLocalStorage = (
+  key: string
+): { token: string; user: UserType | null } => {
+  const token = localStorage.getItem(key) ?? "";
+  const parsed: TLoginUserJWT = decodeToken(JSON.parse(token));
+  const isValid = isTokenValid(parsed);
+  if (!isValid) return { token: "", user: null };
+  const { exp, iat, ...user } = parsed;
+  return { token, user: user };
 };

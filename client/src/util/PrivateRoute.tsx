@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router";
+import { decodeToken, isTokenValid } from "../api/jwt";
 import Navbar from "../components/Navbar/Navbar";
-import type { InitialStateType } from "../features/user/userSlice";
-import { userAppSelect } from "../store";
+import { logout, type InitialStateType } from "../features/user/userSlice";
+import { userAppDispatch, userAppSelect } from "../store";
 import ToastHelper from "./ToastHelper";
 
 const PrivateRoute: React.FC<any> = ({}) => {
@@ -11,13 +12,16 @@ const PrivateRoute: React.FC<any> = ({}) => {
   ) as unknown as InitialStateType;
 
   const navigate = useNavigate();
+  const dispatch = userAppDispatch();
 
   useEffect(() => {
-    if (!userState.user || userState.user === null) {
+    const isValid = isTokenValid(decodeToken(userState.token));
+    if (!isValid || !userState.user || userState.user === null) {
+      dispatch(logout());
       navigate("/login");
       ToastHelper.info("Please login in");
     }
-  }, [userState]);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col text-black">

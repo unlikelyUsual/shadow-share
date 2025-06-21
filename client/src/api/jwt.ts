@@ -1,14 +1,12 @@
 import { jwtDecode } from "jwt-decode"; // Import the named export
+import type { TLoginUserJWT } from "../types/UserType";
 
-interface JwtPayload {
-  name: string;
-  email: string;
-  id: number;
-  role: string;
-  exp: number;
-  iat: number;
-}
+export const decodeToken = (token: string): TLoginUserJWT => {
+  return jwtDecode<TLoginUserJWT>(token);
+};
 
-export const decodeToken = (token: string): JwtPayload => {
-  return jwtDecode<JwtPayload>(token);
+export const isTokenValid = (token: TLoginUserJWT | null): boolean => {
+  if (!token || !token.exp) return false;
+  const currentTime = Math.floor(Date.now() / 1000);
+  return token.exp > currentTime;
 };

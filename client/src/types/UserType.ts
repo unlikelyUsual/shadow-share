@@ -27,3 +27,8 @@ export type TRegisterUser = {
   password: string;
   username: string;
 };
+
+export type TLoginUserJWT = { iat: number; exp: number } & Pick<
+  UserModelType,
+  "id" | "email" | "name" | "username" | "role"
+>;
