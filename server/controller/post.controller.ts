@@ -1,7 +1,8 @@
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { Request, Response } from "express";
 import { db } from "../config/db.config";
 import { PostTable } from "../db/PostTable";
+import { UserTable } from "../db/UserTable";
 import ErrorHandler from "../util/ErrorHandler";
 
 class PostController {
@@ -12,7 +13,7 @@ class PostController {
       const post: any = {
         title,
         content,
-        user: id,
+        userId: id,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -28,11 +29,22 @@ class PostController {
 
   getAllPosts = async (req: Request, res: Response) => {
     try {
-      const rows = await db
+      const user = await db
+        .select({
+          id: UserTable.id,
+          name: UserTable.name,
+          username: UserTable.username,
+        })
+        .from(UserTable)
+        .as("user");
+
+      const posts = await db
         .select()
         .from(PostTable)
+        .innerJoin(user, eq(PostTable.userId, user.id))
         .orderBy(desc(PostTable.updatedAt));
-      return res.json({ posts: rows, message: "Fetched!" });
+
+      return res.json({ posts, message: "Fetched!" });
     } catch (err) {
       return ErrorHandler.handleError(res, err);
     }

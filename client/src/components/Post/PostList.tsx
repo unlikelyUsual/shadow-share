@@ -1,9 +1,12 @@
 import React from "react";
 import { useGetPostsQuery } from "../../features/post/postSlice";
+import { userAppSelect } from "../../store";
 import no_data from "/img/no_data.jpg";
 import user_default_image from "/img/user_profile.jpg";
 
 const PostList: React.FC = () => {
+  const userState = userAppSelect((store) => store.user.user);
+
   const { isFetching, isLoading, data } = useGetPostsQuery({
     refetchOnMountOrArgChange: true,
   });
@@ -12,7 +15,7 @@ const PostList: React.FC = () => {
 
   if (!data) return <div>No data available</div>;
 
-  const { rows: posts } = data;
+  const { posts } = data;
 
   if (posts.length === 0) {
     return (
@@ -24,8 +27,10 @@ const PostList: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 gap-6">
-      {posts.map((post) => {
-        const author = post.userId;
+      {posts.map((data) => {
+        const author = data.user;
+        const isMe = data.user.id === userState.id;
+        const post = data.posts;
         const formattedDate = new Date(post.createdAt).toLocaleDateString(
           undefined,
           {
@@ -42,7 +47,7 @@ const PostList: React.FC = () => {
             key={post.id}
             className="bg-white mb-3  p-6 rounded-lg shadow-md max-w-xl mx-auto w-full"
           >
-            {author && (
+            {author?.name && (
               <div className="flex items-center mb-4">
                 <img
                   src={user_default_image}
@@ -51,7 +56,7 @@ const PostList: React.FC = () => {
                 />
                 <div>
                   <span className="font-semibold text-gray-800 text-lg">
-                    {author}
+                    {isMe ? "Me" : author.username}
                   </span>
                   <p className="text-sm text-gray-500">{formattedDate}</p>
                 </div>

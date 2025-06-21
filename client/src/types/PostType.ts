@@ -1,3 +1,5 @@
+import type { UserModelType } from "./UserType";
+
 export type PostModelType = {
   id: number;
   title: string;
@@ -16,7 +18,12 @@ export type AddNewPostRes = {
   message: string;
 };
 
+export type TGetAllPostModel = {
+  posts: PostModelType;
+  user: UserModelType;
+};
+
 export type GetAllPostRes = {
-  rows: PostModelType[];
+  posts: TGetAllPostModel[];
   message: string;
 };

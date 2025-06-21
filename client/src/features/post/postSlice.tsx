@@ -9,6 +9,7 @@ export const postSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPosts: builder.query<GetAllPostRes, unknown>({
       query: () => ({ url: `posts/all` }),
+      providesTags: ["Posts"],
     }),
     addPost: builder.mutation<AddNewPostRes, AddNewPost>({
       query: (payload) => ({
@@ -16,6 +17,7 @@ export const postSlice = apiSlice.injectEndpoints({
         body: payload,
         method: "POST",
       }),
+      invalidatesTags: ["Posts"],
     }),
   }),
 });
