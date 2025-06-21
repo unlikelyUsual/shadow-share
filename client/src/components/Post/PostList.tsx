@@ -12,7 +12,7 @@ const PostList: React.FC = () => {
 
   if (!data) return <div>No data available</div>;
 
-  const { posts } = data;
+  const { rows: posts } = data;
 
   if (posts.length === 0) {
     return (

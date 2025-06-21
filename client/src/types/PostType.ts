@@ -17,6 +17,6 @@ export type AddNewPostRes = {
 };
 
 export type GetAllPostRes = {
-  posts: PostModelType[];
+  rows: PostModelType[];
   message: string;
 };

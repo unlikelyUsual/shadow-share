@@ -8,7 +8,7 @@ import { apiSlice } from "../apiSlice";
 export const postSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPosts: builder.query<GetAllPostRes, unknown>({
-      query: () => ({ url: `post/all` }),
+      query: () => ({ url: `posts/all` }),
     }),
     addPost: builder.mutation<AddNewPostRes, AddNewPost>({
       query: (payload) => ({

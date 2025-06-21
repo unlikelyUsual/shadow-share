@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RootStateType } from "../store";
 import { BASE_URL } from "../util/Constants";
+import ToastHelper from "../util/ToastHelper";
 import { logout } from "./user/userSlice";
 
 const fetchQuery = fetchBaseQuery({
@@ -15,7 +16,8 @@ const fetchQuery = fetchBaseQuery({
 const customBaseQuery = async (args: any, api: any, extraOptions: any) => {
   const result = await fetchQuery(args, api, extraOptions);
 
-  if (result?.error?.status === 401) {
+  if (result?.error?.status === 401 || result?.error?.status === 403) {
+    ToastHelper.error("Session Expired");
     api.dispatch(logout());
     window.location.href = "/login";
   }

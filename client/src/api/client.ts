@@ -10,9 +10,7 @@ export const getLocalStorage = (
   key: string
 ): { token: string; user: UserType | null } => {
   const token = localStorage.getItem(key) ?? "";
-  const parsed: TLoginUserJWT = decodeToken(
-    token.length > 0 ? JSON.parse(token) : ""
-  );
+  const parsed: TLoginUserJWT | null = decodeToken(token ?? "");
   const isValid = isTokenValid(parsed);
   if (!isValid) return { token: "", user: null };
   const { exp, iat, ...user } = parsed;
