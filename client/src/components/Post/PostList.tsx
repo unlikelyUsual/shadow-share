@@ -28,7 +28,7 @@ const PostList: React.FC = () => {
     <div className="grid grid-cols-1 gap-6">
       {posts.map((data) => {
         const author = data.user;
-        const isMe = data.user.id === userState.id;
+        const isMe = data.user?.id === userState?.id;
         const post = data.posts;
         const formattedDate = new Date(post.createdAt).toLocaleDateString(
           undefined,

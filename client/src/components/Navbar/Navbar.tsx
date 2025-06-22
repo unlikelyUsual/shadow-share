@@ -4,7 +4,7 @@ import React, {
   useState,
   type MouseEvent as ReactMouseEvent,
 } from "react";
-import { Link } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import { logout } from "../../features/user/userSlice";
 import { userAppDispatch, userAppSelect } from "../../store";
 
@@ -14,6 +14,7 @@ const Navbar: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dispatch = userAppDispatch();
+  const navigate = useNavigate();
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -41,11 +42,15 @@ const Navbar: React.FC = () => {
   const logOffUser = (ev: ReactMouseEvent<HTMLAnchorElement>) => {
     ev.preventDefault();
     dispatch(logout());
+    navigate("/login");
   };
 
   return (
     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f1f2f4] px-10 py-3">
-      <div className="flex items-center gap-4 text-[#121416]">
+      <NavLink
+        to="/dashboard"
+        className="flex items-center gap-4 text-[#121416]"
+      >
         <div className="size-4">
           <svg
             viewBox="0 0 48 48"
@@ -68,7 +73,7 @@ const Navbar: React.FC = () => {
         <h2 className="text-[#121416] text-lg font-bold leading-tight tracking-[-0.015em]">
           Shadow Share
         </h2>
-      </div>
+      </NavLink>
 
       <div className="flex flex-1 justify-end gap-8">
         {userState && (
