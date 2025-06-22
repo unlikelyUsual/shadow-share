@@ -2,7 +2,6 @@ import React from "react";
 import { useGetPostsQuery } from "../../features/post/postSlice";
 import { userAppSelect } from "../../store";
 import no_data from "/img/no_data.jpg";
-import user_default_image from "/img/user_profile.jpg";
 
 const PostList: React.FC = () => {
   const userState = userAppSelect((store) => store.user.user);
@@ -49,11 +48,15 @@ const PostList: React.FC = () => {
           >
             {author?.name && (
               <div className="flex items-center mb-4">
-                <img
-                  src={user_default_image}
-                  // alt={author.name}
-                  className="w-12 h-12 rounded-full border-2 border-gray-200 object-cover mr-3"
-                />
+                <div
+                  className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 cursor-pointer mr-3"
+                  style={{
+                    backgroundImage: `url(${
+                      "https://placehold.co/40x40/CCCCCC/000000?text=" +
+                      author.name.split("")[0]
+                    })`,
+                  }}
+                ></div>
                 <div>
                   <span className="font-semibold text-gray-800 text-lg">
                     {isMe ? "Me" : author.username}

@@ -1,8 +1,47 @@
-import React from "react";
-import { userAppSelect } from "../../store";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
+import { Link } from "react-router";
+import { logout } from "../../features/user/userSlice";
+import { userAppDispatch, userAppSelect } from "../../store";
 
 const Navbar: React.FC = () => {
   const userState = userAppSelect((state) => state.user.user);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const dispatch = userAppDispatch();
+
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    function handleClickOutside(event: globalThis.MouseEvent) {
+      if (
+        dropdownRef.current &&
+        buttonRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const logOffUser = (ev: ReactMouseEvent<HTMLAnchorElement>) => {
+    ev.preventDefault();
+    dispatch(logout());
+  };
 
   return (
     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f1f2f4] px-10 py-3">
@@ -33,7 +72,9 @@ const Navbar: React.FC = () => {
 
       <div className="flex flex-1 justify-end gap-8">
         {userState && (
-          <div
+          <button
+            ref={buttonRef}
+            type="button"
             className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 cursor-pointer"
             style={{
               backgroundImage: `url(${
@@ -41,10 +82,55 @@ const Navbar: React.FC = () => {
                 userState.name.split("")[0]
               })`,
             }}
-            role="img"
-            aria-label="User profile picture"
-          ></div>
+            id="user-menu-button"
+            aria-expanded={isDropdownOpen}
+            onClick={toggleDropdown}
+          ></button>
         )}
+
+        <div
+          ref={dropdownRef}
+          className={`z-50 ${
+            isDropdownOpen ? "block" : "hidden"
+          } my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600 absolute right-10 top-14`}
+          id="user-dropdown"
+        >
+          <div className="px-4 py-3">
+            <span className="block text-sm text-gray-900 dark:text-white">
+              {userState?.name}
+            </span>
+            <span className="block text-sm  text-gray-500 truncate dark:text-gray-400">
+              {userState?.email}
+            </span>
+          </div>
+          <ul className="py-2" aria-labelledby="user-menu-button">
+            <li>
+              <Link
+                to="/dashboard"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+              >
+                Timeline
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/profile"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+              >
+                Profile
+              </Link>
+            </li>
+            <li>
+              <a
+                href="#"
+                onClick={logOffUser}
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+              >
+                Sign out
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </header>
   );

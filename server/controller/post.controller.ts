@@ -27,6 +27,8 @@ class PostController {
     }
   };
 
+  //TODO : update the api for pagination
+  //F7ECFY5pFA
   getAllPosts = async (req: Request, res: Response) => {
     try {
       const user = await db

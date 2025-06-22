@@ -1,8 +1,10 @@
 import { Provider } from "react-redux";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { BrowserRouter, Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
 import Dashboard from "./components/pages/Dashboard";
 import Login from "./components/pages/Login";
+import PageNotFound from "./components/pages/PageNotFound";
+import Profile from "./components/pages/Profile";
 import Signup from "./components/pages/Signup";
 import { store } from "./store";
 import PrivateRoute from "./util/PrivateRoute";
@@ -22,10 +24,11 @@ const App = () => {
           {/* Private Routes */}
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
 
           {/* Default route / redirect to login if no path matches */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer />

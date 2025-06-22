@@ -10,7 +10,10 @@ export interface UserModelType {
   updatedAt: Date;
 }
 
-export type UserType = Partial<UserModelType>;
+export type UserType = Pick<
+  UserModelType,
+  "email" | "id" | "username" | "name" | "role"
+>;
 
 export interface LoginType {
   username: string;
