@@ -32,3 +32,11 @@ export const insertPostSchema = z.object({
   title: z.string(),
   content: z.string(),
 });
+
+export const getAllPostSchema = z.object({
+  limit: z.number().optional(),
+  idCursor: z.number().optional(),
+  timestampCursor: z.string().optional(),
+});
+
+export type GetAllPostType = z.infer<typeof getAllPostSchema>;

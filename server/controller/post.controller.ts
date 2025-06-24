@@ -1,7 +1,7 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, lt } from "drizzle-orm";
 import { Request, Response } from "express";
 import { db } from "../config/db.config";
-import { PostTable } from "../db/PostTable";
+import { GetAllPostType, PostTable } from "../db/PostTable";
 import { UserTable } from "../db/UserTable";
 import ErrorHandler from "../util/ErrorHandler";
 
@@ -27,11 +27,14 @@ class PostController {
     }
   };
 
-  //TODO : update the api for pagination
-  //F7ECFY5pFA
   getAllPosts = async (req: Request, res: Response) => {
     try {
-      const user = await db
+      const {
+        limit = 2,
+        idCursor,
+        timestampCursor,
+      } = req.query as GetAllPostType;
+      const user = db
         .select({
           id: UserTable.id,
           name: UserTable.name,
@@ -44,7 +47,16 @@ class PostController {
         .select()
         .from(PostTable)
         .innerJoin(user, eq(PostTable.userId, user.id))
-        .orderBy(desc(PostTable.updatedAt));
+        .where(
+          idCursor && timestampCursor
+            ? and(
+                lt(PostTable.id, idCursor),
+                lt(PostTable.updatedAt, new Date(timestampCursor))
+              )
+            : undefined
+        )
+        .orderBy(desc(PostTable.updatedAt), desc(PostTable.id))
+        .limit(limit);
 
       return res.json({ posts, message: "Fetched!" });
     } catch (err) {
