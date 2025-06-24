@@ -1,13 +1,25 @@
-import React from "react";
-import { useGetPostsQuery } from "../../features/post/postSlice";
+import React, { useState } from "react";
+import { useGetPostsQuery } from "../../features/post/postApi";
 import { userAppSelect } from "../../store";
+import type { TGetAllPostQuery } from "../../types/PostType";
 import no_data from "/img/no_data.jpg";
 
 const PostList: React.FC = () => {
   const userState = userAppSelect((store) => store.user.user);
+  const [paginaton, setPagination] = useState<TGetAllPostQuery>({
+    idCursor: null,
+    timestampCursor: null,
+    limit: 2,
+  });
 
-  const { isFetching, isLoading, data } = useGetPostsQuery({
+  const {
+    isFetching,
+    isLoading,
+    data,
+    refetch: fetchAgain,
+  } = useGetPostsQuery(paginaton, {
     refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
   });
 
   if (isLoading || isFetching) return <div>Loading...</div>;
@@ -23,6 +35,15 @@ const PostList: React.FC = () => {
       </div>
     );
   }
+
+  const nextPage = () => {
+    const lagePost = posts[posts.length - 1];
+    setPagination({
+      ...paginaton,
+      idCursor: lagePost.posts.id,
+      timestampCursor: lagePost.posts.updatedAt.toISOString(),
+    });
+  };
 
   return (
     <div className="grid grid-cols-1 gap-6">

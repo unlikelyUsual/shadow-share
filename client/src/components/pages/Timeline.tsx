@@ -1,5 +1,5 @@
 import React, { useState, type ChangeEvent, type MouseEvent } from "react";
-import { useAddPostMutation } from "../../features/post/postSlice";
+import { useAddPostMutation } from "../../features/post/postApi";
 import type { AddNewPost } from "../../types/PostType";
 import ToastHelper from "../../util/ToastHelper";
 import PostList from "../Post/PostList";

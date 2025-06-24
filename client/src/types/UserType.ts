@@ -35,3 +35,8 @@ export type TLoginUserJWT = { iat: number; exp: number } & Pick<
   UserModelType,
   "id" | "email" | "name" | "username" | "role"
 >;
+
+export type TGetUser = {
+  user: UserModelType;
+  message: string;
+};

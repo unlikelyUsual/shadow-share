@@ -2,12 +2,13 @@ import type {
   AddNewPost,
   AddNewPostRes,
   GetAllPostRes,
+  TGetAllPostQuery,
 } from "../../types/PostType";
 import { apiSlice } from "../apiSlice";
 
-export const postSlice = apiSlice.injectEndpoints({
+export const postApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getPosts: builder.query<GetAllPostRes, unknown>({
+    getPosts: builder.query<GetAllPostRes, TGetAllPostQuery>({
       query: () => ({ url: `posts/all` }),
       providesTags: ["Posts"],
     }),
@@ -22,4 +23,4 @@ export const postSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetPostsQuery, useAddPostMutation } = postSlice;
+export const { useGetPostsQuery, useAddPostMutation } = postApi;

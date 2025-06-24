@@ -1,6 +1,7 @@
 import type {
   ILoginRespone,
   LoginType,
+  TGetUser,
   TRegisterUser,
 } from "../../types/UserType";
 import { apiSlice } from "../apiSlice";
@@ -22,6 +23,12 @@ export const userApi = apiSlice.injectEndpoints({
         url: "users/register",
         method: "POST",
         body: payload,
+      }),
+    }),
+    getUser: builder.query<TGetUser, null>({
+      query: () => ({
+        url: "users/user",
+        method: "GET",
       }),
     }),
   }),

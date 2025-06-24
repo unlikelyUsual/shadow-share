@@ -27,3 +27,9 @@ export type GetAllPostRes = {
   posts: TGetAllPostModel[];
   message: string;
 };
+
+export type TGetAllPostQuery = {
+  timestampCursor?: string;
+  idCursor?: number;
+  limit?: number;
+};
