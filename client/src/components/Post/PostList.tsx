@@ -72,7 +72,7 @@ const PostList: React.FC = () => {
         return (
           <div
             key={post.id}
-            className="bg-white mb-3  p-6 rounded-lg shadow-md max-w-xl mx-auto w-full"
+            className="bg-white mb-3  p-6 rounded-lg shadow-md max-w-xl mx-auto w-full card-box-shadow"
           >
             {author?.name && (
               <div className="flex items-center mb-4">
