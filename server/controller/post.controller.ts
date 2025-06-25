@@ -34,6 +34,7 @@ class PostController {
         idCursor,
         timestampCursor,
       } = req.query as GetAllPostType;
+      console.log(`Params : `, req.query);
       const user = db
         .select({
           id: UserTable.id,
@@ -50,13 +51,13 @@ class PostController {
         .where(
           idCursor && timestampCursor
             ? and(
-                lt(PostTable.id, idCursor),
+                lt(PostTable.id, Number(idCursor)),
                 lt(PostTable.updatedAt, new Date(timestampCursor))
               )
             : undefined
         )
         .orderBy(desc(PostTable.updatedAt), desc(PostTable.id))
-        .limit(limit);
+        .limit(Number(limit));
 
       return res.json({ posts, message: "Fetched!" });
     } catch (err) {

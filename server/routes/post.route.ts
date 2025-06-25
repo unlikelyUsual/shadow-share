@@ -1,7 +1,7 @@
 import { Router } from "express";
 import PostController from "../controller/post.controller";
 import authentication from "../middlewares/authentication.middleware";
-import { createPost } from "../middlewares/post.middleware";
+import { createPost, getAllPost } from "../middlewares/post.middleware";
 import middlewareHandler from "../util/middlewareHandler";
 
 const router = Router();
@@ -15,7 +15,7 @@ router.post(
 
 router.get(
   "/all",
-  middlewareHandler([authentication]),
+  middlewareHandler([authentication, getAllPost]),
   controller.getAllPosts as any
 );
 

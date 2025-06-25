@@ -34,8 +34,8 @@ export const insertPostSchema = z.object({
 });
 
 export const getAllPostSchema = z.object({
-  limit: z.number().optional(),
-  idCursor: z.number().optional(),
+  limit: z.string().optional(),
+  idCursor: z.string().optional(),
   timestampCursor: z.string().optional(),
 });
 
