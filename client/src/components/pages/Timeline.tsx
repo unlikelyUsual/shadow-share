@@ -13,8 +13,12 @@ const Timeline: React.FC = () => {
 
   const addNewPost = async (ev: MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
+    if (fields.title.length == 0 || fields.content.length == 0) {
+      ToastHelper.error("Field fill all the fields");
+      return;
+    }
+
     await addPost(fields).unwrap();
-    // console.log(`Response`, res);
     ToastHelper.success("Added successfully!");
     setFields({
       title: "",
@@ -25,7 +29,7 @@ const Timeline: React.FC = () => {
   const onInputChange = (ev: ChangeEvent<HTMLInputElement>) => {
     setFields({
       ...fields,
-      [ev.target.name]: ev.target.value,
+      [ev.target.name]: ev.target.value.trim(),
     });
   };
 

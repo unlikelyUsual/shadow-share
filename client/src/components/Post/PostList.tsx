@@ -20,10 +20,7 @@ const PostList: React.FC = () => {
 
   useEffect(() => {
     if (data?.posts) {
-      console.log("Triggered : ", data?.posts);
-      console.log("Existing : ", allPosts.length);
       const p = data?.posts ?? [];
-      console.log("Existing : ", [...allPosts, ...p]);
       setAllPosts((prev) => [...prev, ...p]);
     }
   }, [data?.posts]);
