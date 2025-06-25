@@ -5,8 +5,8 @@ export type PostModelType = {
   title: string;
   content: string;
   userId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type PostType = Partial<PostModelType>;
