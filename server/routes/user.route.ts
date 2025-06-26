@@ -1,6 +1,7 @@
 import { Router } from "express";
 import UserController from "../controller/user.controller";
 import authentication from "../middlewares/authentication.middleware";
+import redisMiddleware from "../middlewares/redis.middleware";
 import {
   loginUser,
   registerUser,
@@ -20,13 +21,13 @@ router.post("/login", middlewareHandler([loginUser]), controller.login as any);
 
 router.get(
   "/user",
-  middlewareHandler([authentication]),
+  middlewareHandler([authentication, redisMiddleware]),
   controller.getUser as any
 );
 
 router.get(
   "/posts",
-  middlewareHandler([authentication]),
+  middlewareHandler([authentication, redisMiddleware]),
   controller.posts as any
 );
 

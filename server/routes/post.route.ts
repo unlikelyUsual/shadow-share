@@ -2,6 +2,7 @@ import { Router } from "express";
 import PostController from "../controller/post.controller";
 import authentication from "../middlewares/authentication.middleware";
 import { createPost, getAllPost } from "../middlewares/post.middleware";
+import redisMiddleware from "../middlewares/redis.middleware";
 import middlewareHandler from "../util/middlewareHandler";
 
 const router = Router();
@@ -15,7 +16,7 @@ router.post(
 
 router.get(
   "/all",
-  middlewareHandler([authentication, getAllPost]),
+  middlewareHandler([authentication, getAllPost, redisMiddleware]),
   controller.getAllPosts as any
 );
 
