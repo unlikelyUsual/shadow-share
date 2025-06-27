@@ -4,15 +4,17 @@ const middlewareHandler =
   (middlewares: RequestHandler[]) =>
   (req: Request, res: Response, next: NextFunction) => {
     console.log("Request : ", {
-      body: req.body,
+      // url: req.url,
       path: req.path,
-      // headers: req.headers,
+      body: req.body,
+      query: req.query,
+      param: req.params,
     });
     const executeMiddleware = (index: number) => {
       if (index < middlewares.length) {
         middlewares[index](req, res, (err?: any) => {
           if (err) {
-            return next(err); // Pass error to the next error-handling middleware
+            return next(err);
           }
           executeMiddleware(index + 1); // Move to the next middleware
         });

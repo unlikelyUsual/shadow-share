@@ -1,6 +1,7 @@
 import { and, desc, eq, lt } from "drizzle-orm";
 import { Request, Response } from "express";
 import { db } from "../config/db.config";
+import Redis from "../config/redis.config";
 import { GetAllPostType, PostTable } from "../db/PostTable";
 import { UserTable } from "../db/UserTable";
 import ErrorHandler from "../util/ErrorHandler";
@@ -59,7 +60,10 @@ class PostController {
         .orderBy(desc(PostTable.updatedAt), desc(PostTable.id))
         .limit(Number(limit));
 
-      return res.json({ posts, message: "Fetched!" });
+      const response = { posts, message: "Fetched!" };
+      await Redis.set(Redis.getKey(req), response);
+
+      return res.json(response);
     } catch (err) {
       return ErrorHandler.handleError(res, err);
     }

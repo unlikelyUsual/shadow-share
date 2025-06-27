@@ -7,10 +7,7 @@ const redisMiddleware = async (
   next: NextFunction
 ) => {
   try {
-    const url = req.route;
-    const query = req.query;
-    const key = `${url}:${query}`;
-    const data = Redis.get(key);
+    const data = await Redis.get(Redis.getKey(req));
     if (data) {
       console.log("Fetched from the cache");
       res.json(data);

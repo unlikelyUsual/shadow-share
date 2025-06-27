@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/config.env";
 import { db } from "../config/db.config";
+import Redis from "../config/redis.config";
 import { PostTable } from "../db/PostTable";
 import { UserTable, userTypeEnum } from "../db/UserTable";
 import ErrorHandler from "../util/ErrorHandler";
@@ -57,10 +58,14 @@ export default class UserController {
         .from(UserTable)
         .where(eq(UserTable.id, id));
 
-      return res.json({
+      const response = {
         user: rows[0],
         message: `Fetched!`,
-      });
+      };
+
+      await Redis.set(Redis.getKey(req), response);
+
+      return res.json(response);
     } catch (err) {
       return ErrorHandler.handleError(res, err);
     }
@@ -125,7 +130,11 @@ export default class UserController {
         .where(eq(PostTable.userId, id))
         .orderBy(desc(PostTable.updatedAt));
 
-      return res.json({ posts, message: "Fetch!" });
+      const response = { posts, message: "Fetch!" };
+
+      await Redis.set(Redis.getKey(req), response);
+
+      return res.json(response);
     } catch (err) {
       return ErrorHandler.handleError(res, err);
     }
