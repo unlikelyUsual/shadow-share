@@ -15,6 +15,8 @@ import z from "zod";
 
 export const userTypeEnum = pgEnum("userType", ["admin", "user"]);
 
+export const [adminRole, userRole] = userTypeEnum.enumValues;
+
 export const UserTable = pgTable("users", {
   id: integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1000 }),
   name: varchar({ length: 50 }).notNull(),

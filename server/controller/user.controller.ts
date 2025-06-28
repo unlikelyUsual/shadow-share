@@ -139,4 +139,17 @@ export default class UserController {
       return ErrorHandler.handleError(res, err);
     }
   };
+
+  adminCommand = async (req: Request, res: Response) => {
+    try {
+      const { command, service } = req.body;
+      if (service === "redis") {
+        Redis.sendCommand(command);
+      }
+
+      return res.json({ message: "Success" });
+    } catch (err) {
+      return ErrorHandler.handleError(res, err);
+    }
+  };
 }

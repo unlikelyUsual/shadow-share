@@ -1,7 +1,9 @@
 import { Router } from "express";
 import UserController from "../controller/user.controller";
+import { adminRole } from "../db/UserTable";
 import authentication from "../middlewares/authentication.middleware";
 import redisMiddleware from "../middlewares/redis.middleware";
+import roleAuth from "../middlewares/roleAuth.middleware";
 import {
   loginUser,
   registerUser,
@@ -33,8 +35,8 @@ router.get(
 
 router.post(
   "/admin/command",
-  middlewareHandler([authentication]),
-  controller.adminCommand
+  middlewareHandler([authentication, roleAuth(adminRole)]),
+  controller.adminCommand as any
 );
 
 export default router;

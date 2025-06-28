@@ -46,6 +46,10 @@ class Redis {
     const app = req.baseUrl.split("/");
     return `${app[app.length - 1]}:${url}`;
   }
+
+  static async sendCommand(command: string[]) {
+    return await this.client.sendCommand(command);
+  }
 }
 
 export default Redis;

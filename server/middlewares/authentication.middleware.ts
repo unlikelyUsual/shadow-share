@@ -17,9 +17,8 @@ const authentication = (req: Request, res: Response, next: NextFunction) => {
 
     verify(token, JWT_SECRET, (err, user) => {
       if (err) {
-        return res.status(403).json({ error: "Invalid token" });
+        res.status(403).json({ error: "Invalid token" });
       }
-
       req.body.user = user;
       next();
     });
