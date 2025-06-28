@@ -47,6 +47,7 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: db
       REDIS_HOST: redis
+      JWT_SECRET: "***secret***"
       NODE_ENV: production
     ports:
       - "3000:3000"
