@@ -31,4 +31,10 @@ router.get(
   controller.posts as any
 );
 
+router.post(
+  "/admin/command",
+  middlewareHandler([authentication]),
+  controller.adminCommand
+);
+
 export default router;

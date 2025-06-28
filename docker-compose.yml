@@ -13,6 +13,13 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   redis:
     image: redis:7
@@ -20,6 +27,13 @@ services:
     restart: always
     ports:
       - "6379:6379"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   server:
     build:
@@ -33,11 +47,35 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: db
       REDIS_HOST: redis
+      NODE_ENV: production
     ports:
       - "3000:3000"
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: react_client
+    restart: always
+    environment:
+      VITE_API_URL: http://localhost:3000
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

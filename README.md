@@ -1,199 +1,151 @@
-# Shadow share
+# Random Post Application
 
-A full-stack social media application that allows users to create accounts, log in, and share posts with others.
+A full-stack application with React frontend, Node.js backend, PostgreSQL database, and Redis cache.
 
-## 🚀 Features
+## Architecture
 
-- **User Authentication**: Secure signup and login functionality
-- **Post Management**: Create, read, update, and delete posts
-- **Responsive Design**: Built with Tailwind CSS for a mobile-friendly experience
-- **Real-time Updates**: Efficient state management with Redux
+- **Frontend**: React with TypeScript, Vite, and Tailwind CSS
+- **Backend**: Node.js with Express and TypeScript
+- **Database**: PostgreSQL with Drizzle ORM
+- **Cache**: Redis
+- **Containerization**: Docker and Docker Compose
 
-## 🛠️ Tech Stack
+## Quick Start
 
-### Frontend
+### Prerequisites
 
-- **React 19** with TypeScript
-- **Redux Toolkit** for state management
-- **React Router** for navigation
-- **Tailwind CSS** for styling
-- **Vite** as the build tool
-- **React Toastify** for notifications
+- Docker and Docker Compose installed on your system
 
-### Backend
+### Running the Application
 
-- **Express.js** with TypeScript
-- **PostgreSQL** for database
-- **Drizzle ORM** for database interactions
-- **Redis** for caching
-- **JWT** for authentication
-- **Docker** for containerization
-
-## 📋 Prerequisites
-
-- Node.js (v18 or higher)
-- Docker and Docker Compose
-- npm or yarn
-
-## 🔧 Installation & Setup
-
-### Clone the repository
+1. Clone the repository and navigate to the project directory:
 
 ```bash
-git clone https://github.com/yourusername/random-post.git
 cd random-post
 ```
 
-### Using Docker (Recommended)
-
-The easiest way to run the application is using Docker Compose:
+2. Start all services with a single command:
 
 ```bash
-# Start all services (PostgreSQL, Redis, and backend)
-docker-compose up -d
+docker-compose up --build
+```
 
-# To stop all services
+This command will:
+
+- Build and start the PostgreSQL database
+- Build and start the Redis cache
+- Build and start the Node.js backend server
+- Build and start the React frontend
+
+### Accessing the Application
+
+- **Frontend**: http://localhost (port 80)
+- **Backend API**: http://localhost:3000
+- **PostgreSQL**: localhost:5432
+- **Redis**: localhost:6379
+
+### Services
+
+#### Frontend (React)
+
+- Built with Vite and served by Nginx
+- Includes API proxy configuration to backend
+- Accessible at http://localhost
+
+#### Backend (Node.js)
+
+- Express server with TypeScript
+- RESTful API endpoints
+- JWT authentication
+- Accessible at http://localhost:3000
+
+#### Database (PostgreSQL)
+
+- PostgreSQL 15
+- Database name: `db`
+- Username: `root`
+- Password: `root`
+
+#### Cache (Redis)
+
+- Redis 7
+- Used for session management and caching
+
+### Development
+
+To run individual services for development:
+
+#### Backend Development
+
+```bash
+cd server
+npm install
+npm run dev
+```
+
+#### Frontend Development
+
+```bash
+cd client
+npm install
+npm run dev
+```
+
+### Environment Variables
+
+The application uses the following environment variables in Docker:
+
+#### Backend
+
+- `POSTGRES_HOST=postgres`
+- `POSTGRES_USER=root`
+- `POSTGRES_PASSWORD=root`
+- `POSTGRES_DB=db`
+- `REDIS_HOST=redis`
+- `NODE_ENV=production`
+
+#### Frontend
+
+- `VITE_API_URL=http://localhost:3000`
+
+### API Endpoints
+
+The backend provides the following API endpoints:
+
+- `GET /ping` - Health check
+- `POST /api/v1/users/register` - User registration
+- `POST /api/v1/users/login` - User login
+- `GET /api/v1/posts` - Get all posts
+- `POST /api/v1/posts` - Create a new post
+- And more...
+
+### Stopping the Application
+
+To stop all services:
+
+```bash
 docker-compose down
 ```
 
-### Manual Setup
-
-#### Backend Setup
+To stop and remove all data:
 
 ```bash
-# Navigate to server directory
-cd server
-
-# Install dependencies
-npm install
-
-# Set up environment variables
-cp .env.example .env
-# Edit .env file with your configuration
-
-# Run database migrations
-npm run drizzle:push
-
-# Seed the database (optional)
-npm run seed
-
-# Start the development server
-npm run dev
+docker-compose down -v
 ```
 
-#### Frontend Setup
+### Troubleshooting
 
-```bash
-# Navigate to client directory
-cd client
+1. **Port conflicts**: Make sure ports 80, 3000, 5432, and 6379 are not in use
+2. **Build issues**: Try `docker-compose down` and then `docker-compose up --build --force-recreate`
+3. **Database connection**: The backend waits for PostgreSQL to be healthy before starting
+4. **Redis connection**: The backend waits for Redis to be healthy before starting
 
-# Install dependencies
-npm install
+### Network Architecture
 
-# Start the development server
-npm run dev
-```
+All services run in a custom Docker network (`app-network`) which allows:
 
-## 🏗️ Project Structure
+- Frontend to proxy API requests to backend
+- Backend to connect to PostgreSQL and Redis using service names
+- Proper service discovery and communication
 
-```
-random-post/
-├── client/                 # Frontend React application
-│   ├── public/             # Static files
-│   ├── src/                # Source files
-│   │   ├── api/            # API client and utilities
-│   │   ├── assets/         # Images, fonts, etc.
-│   │   ├── components/     # React components
-│   │   ├── features/       # Redux slices
-│   │   ├── types/          # TypeScript type definitions
-│   │   └── util/           # Utility functions
-│   ├── package.json        # Frontend dependencies
-│   └── vite.config.ts      # Vite configuration
-│
-├── server/                 # Backend Express application
-│   ├── config/             # Configuration files
-│   ├── controller/         # Route controllers
-│   ├── db/                 # Database models and migrations
-│   ├── middlewares/        # Express middlewares
-│   ├── routes/             # API routes
-│   ├── util/               # Utility functions
-│   ├── index.ts            # Entry point
-│   └── package.json        # Backend dependencies
-│
-├── docker-compose.yml      # Docker Compose configuration
-└── README.md               # Project documentation
-```
-
-## 🔒 Authentication Flow
-
-1. User registers with username, email, and password
-2. User logs in with credentials
-3. Server validates credentials and returns a JWT token
-4. Client stores the token and includes it in subsequent API requests
-5. Protected routes check for valid token before granting access
-
-## 🌐 API Endpoints
-
-### User Endpoints
-
-- `POST /api/v1/users/signup` - Register a new user
-- `POST /api/v1/users/login` - Authenticate a user
-- `GET /api/v1/users/profile` - Get user profile (protected)
-
-### Post Endpoints
-
-- `GET /api/v1/posts` - Get all posts
-- `GET /api/v1/posts/:id` - Get a specific post
-- `POST /api/v1/posts` - Create a new post (protected)
-- `PUT /api/v1/posts/:id` - Update a post (protected)
-- `DELETE /api/v1/posts/:id` - Delete a post (protected)
-
-## 🧪 Testing
-
-```bash
-# Run frontend tests
-cd client
-npm test
-
-# Run backend tests
-cd server
-npm test
-```
-
-## 🚀 Deployment
-
-### Frontend Deployment
-
-Build the frontend for production:
-
-```bash
-cd client
-npm run build
-```
-
-The build artifacts will be stored in the `client/dist/` directory.
-
-### Backend Deployment
-
-Build the backend for production:
-
-```bash
-cd server
-npm run build
-```
-
-The compiled JavaScript files will be stored in the `server/dist/` directory.
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+The frontend uses Nginx to serve static files and proxy API requests to the backend, eliminating CORS issues and providing a seamless user experience.
