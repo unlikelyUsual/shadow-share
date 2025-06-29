@@ -34,6 +34,7 @@ This command will:
 
 - Build and start the PostgreSQL database
 - Build and start the Redis cache
+- Initialize the database with Drizzle migrations and seed data
 - Build and start the Node.js backend server
 - Build and start the React frontend
 
@@ -133,12 +134,44 @@ To stop and remove all data:
 docker-compose down -v
 ```
 
+### Database Initialization
+
+The application automatically handles database setup through a dedicated initialization service:
+
+1. **Migration Generation**: Drizzle generates database migrations from your schema
+2. **Schema Push**: Migrations are applied to create tables and relationships
+3. **Data Seeding**: Sample users and posts are created for testing
+
+The initialization process:
+
+- Waits for PostgreSQL to be ready
+- Generates Drizzle migrations if they don't exist
+- Pushes schema changes to the database
+- Seeds the database with sample data (only if empty)
+- Ensures the main server starts only after successful initialization
+
+#### Manual Database Operations
+
+If you need to run database operations manually:
+
+```bash
+# Generate new migrations after schema changes
+docker-compose exec server npm run drizzle:generate
+
+# Push schema changes to database
+docker-compose exec server npm run drizzle:push
+
+# Run seed script
+docker-compose exec server npm run seed
+```
+
 ### Troubleshooting
 
 1. **Port conflicts**: Make sure ports 80, 3000, 5432, and 6379 are not in use
 2. **Build issues**: Try `docker-compose down` and then `docker-compose up --build --force-recreate`
 3. **Database connection**: The backend waits for PostgreSQL to be healthy before starting
 4. **Redis connection**: The backend waits for Redis to be healthy before starting
+5. **Database initialization**: If database init fails, check logs with `docker-compose logs db-init`
 
 ### Network Architecture
 

@@ -1,6 +1,9 @@
 # Base image
 FROM node:20-alpine
 
+# Install PostgreSQL client tools (pg_isready, psql, etc.)
+RUN apk add --no-cache postgresql-client
+
 # Set working directory
 WORKDIR /usr/src/app
 
@@ -15,6 +18,9 @@ COPY . .
 
 # Install TypeScript globally (optional, if needed for CLI use)
 RUN npm install -g typescript
+
+# Make init script executable
+RUN chmod +x scripts/init-db.sh
 
 # Compile TypeScript to JavaScript
 RUN npm run build
