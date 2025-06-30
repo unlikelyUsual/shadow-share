@@ -1,5 +1,5 @@
 # Base image
-FROM node:20-alpine
+FROM node:22-alpine
 
 # Install PostgreSQL client tools (pg_isready, psql, etc.)
 RUN apk add --no-cache postgresql-client
