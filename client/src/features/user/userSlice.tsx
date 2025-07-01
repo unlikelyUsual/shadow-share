@@ -31,9 +31,13 @@ export const userSlice = createSlice({
       setLocalstorage(token);
       state.token = token;
       //USER
-      const parsed: TLoginUserJWT = decodeToken(token);
-      const { exp, iat, ...data } = parsed;
-      state.user = data;
+      const parsed: TLoginUserJWT | null = decodeToken(token);
+      if (parsed) {
+        const { exp, iat, ...data } = parsed;
+        state.user = data;
+      } else {
+        state.user = null;
+      }
     },
   },
 });

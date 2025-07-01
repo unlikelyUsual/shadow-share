@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+# export POSTGRES_HOST="localhost" 
+# export POSTGRES_USER="root"
+# export POSTGRES_PASSWORD="root"
+# export POSTGRES_DB="db" 
+
 # Wait for PostgreSQL to be ready
 echo "Waiting for PostgreSQL to be ready..."
 while ! pg_isready -h $POSTGRES_HOST -p 5432 -U $POSTGRES_USER; do

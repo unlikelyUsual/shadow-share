@@ -8,6 +8,13 @@
       "when": 1747320725955,
       "tag": "0000_gifted_butterfly",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1751385963459,
+      "tag": "0001_majestic_sugar_man",
+      "breakpoints": true
     }
   ]
 }

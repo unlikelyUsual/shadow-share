@@ -2,7 +2,14 @@ import { jwtDecode } from "jwt-decode"; // Import the named export
 import type { TLoginUserJWT } from "../types/UserType";
 
 export const decodeToken = (token: string): TLoginUserJWT | null => {
-  return token ? jwtDecode<TLoginUserJWT>(token) : null;
+  try {
+    return token && typeof token === "string" && token.length > 0
+      ? jwtDecode<TLoginUserJWT>(token)
+      : null;
+  } catch (error) {
+    console.error("Invalid JWT token:", error);
+    return null;
+  }
 };
 
 export const isTokenValid = (token: TLoginUserJWT | null): boolean => {
